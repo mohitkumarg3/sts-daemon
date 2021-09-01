@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: notebook
+  namespace: kubesecond 
+  labels:
+    app: notebook
+spec: 
+  serviceName: ""
+  replicas: 2
+  selector: 
+    matchLabels:
+      app: notebook
+  template:
+    metadata:
+      labels:
+        app: notebook      
+    spec:
+      containers:
+      - name: notebook
+        image: bitbull/webserver
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: d-deployment
+  namespace: kubesecond 
+  labels:
+    app: daemon
+spec: 
+  replicas: 3
+  selector: 
+    matchLabels:
+      app: daemon
+  template:
+    metadata:
+      labels:
+        app: daemon      
+    spec:
+      containers:
+      - name: daemon
+        image: bitbull/webserver
+        ports:
+        - containerPort: 80
+
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: keydot
+  namespace: kubesecond 
+  labels:
+    app: bgmi
+spec: 
+  selector: 
+    matchLabels:
+      app: bgmi
+  template:
+    metadata:
+      labels:
+        app: bgmi      
+    spec:
+      containers:
+      - name: bgmi
+        image: bitbull/webserver
+        ports:
+        - containerPort: 80
+
